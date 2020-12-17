@@ -15,20 +15,20 @@ public class Day17 extends Day {
 
     @Override
     public Object partOne() {
-        return solve(false);
+        return solve(6, false);
     }
 
     @Override
     public Object partTwo() {
-        return solve(true);
+        return solve(6, true);
     }
 
-    private Object solve(boolean fourDim) {
-        List<Cube> activeCubes = getActiveCubes(input, fourDim);
-        for (int i = 0; i < 6; i++) {
-            activeCubes = nextStep(activeCubes);
-        }
-        return activeCubes.size();
+    private Object solve(int steps, boolean fourDim) {
+        return Stream.iterate(getActiveCubes(input, fourDim), this::nextStep)
+                .skip(steps)
+                .findFirst()
+                .map(List::size)
+                .orElseThrow();
     }
 
     private List<Cube> nextStep(List<Cube> activeCubes) {
