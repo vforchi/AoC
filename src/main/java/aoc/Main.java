@@ -17,7 +17,7 @@ public class Main {
 
         var resultTwo = day.partTwo().toString();
         var durationTwo = System.currentTimeMillis() - durationOne - start;
-        System.out.println(String.format("Day %s, part 1: %s, %1.3f[s]", args[1], resultTwo, 0.001*durationTwo));
+        System.out.println(String.format("Day %s, part 2: %s, %1.3f[s]", args[1], resultTwo, 0.001*durationTwo));
     }
 
 }
