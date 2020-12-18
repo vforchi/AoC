@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Day {
-
+    
     protected List<String> input = new ArrayList<>();
 
     abstract public Object partOne();
