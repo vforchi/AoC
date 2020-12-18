@@ -1,7 +1,7 @@
 plugins {
-    `java`
-    `groovy`
-    id("antlr")
+    java
+    groovy
+    antlr
 }
 
 group = "aoc"
@@ -11,17 +11,11 @@ repositories {
     mavenCentral()
 }
 
-sourceSets.create("generated") {
-    java.srcDir("src/main/generated")
-}
-
 dependencies {
     compileOnly("org.projectlombok:lombok:1.18.16")
     annotationProcessor("org.projectlombok:lombok:1.18.16")
 
     antlr("org.antlr:antlr4:4.7.2")
-    "generatedImplementation"("org.antlr:antlr4-runtime:4.7.2")
-    implementation(sourceSets.getByName("generated").output)
     implementation("org.codehaus.groovy:groovy:3.0.7")
     implementation("com.google.guava:guava:30.1-jre")
     implementation("io.vavr:vavr:0.10.3")
@@ -30,16 +24,5 @@ dependencies {
 
 tasks.generateGrammarSource {
     maxHeapSize = "64m"
-    arguments.addAll(listOf("-package", "aoc.parser"))
-    outputDirectory = file("src/main/generated/aoc/parser")
+    arguments.addAll(listOf("-package", "aoc.y2020.day18.parser", "-visitor"))
 }
-
-tasks.compileJava {
-    dependsOn(":generateGrammarSource")
-//    source(sourceSets.getByName("generated").java, sourceSets.main.java)
-}
-
-tasks.clean {
-    delete("src/main/generated")
-}
-

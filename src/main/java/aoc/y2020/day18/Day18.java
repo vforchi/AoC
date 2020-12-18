@@ -1,35 +1,43 @@
 package aoc.y2020.day18;
 
 import aoc.Day;
-import aoc.parser.Day18Lexer;
-import aoc.parser.Day18Parser;
-import org.antlr.v4.runtime.CharStream;
+import aoc.y2020.day18.parser.CalcPartOneLexer;
+import aoc.y2020.day18.parser.CalcPartOneParser;
+import aoc.y2020.day18.parser.CalcPartTwoLexer;
+import aoc.y2020.day18.parser.CalcPartTwoParser;
+import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.UnbufferedCharStream;
-
-import java.io.ByteArrayInputStream;
 
 public class Day18 extends Day {
 
     @Override
     public Object partOne() {
-        return solve(6, false);
+        return input.stream()
+                .mapToLong(this::evaluateOne)
+                .sum();
     }
 
     @Override
     public Object partTwo() {
-        return solve(6, true);
+        return input.stream()
+                .mapToLong(this::evaluateTwo)
+                .sum();
     }
 
-    private void parse() {
-//
-//        input.stream()
-//                .map()
-
-        var markupLexer = new Day18Lexer(new UnbufferedCharStream(new ByteArrayInputStream("".getBytes())));
+    private long evaluateOne(String expr) {
+        var markupLexer = new CalcPartOneLexer(CharStreams.fromString(expr));
         var commonTokenStream = new CommonTokenStream(markupLexer);
-        var parser = new Day18Parser(commonTokenStream);
-        var visitor = new Day18Visitor();
-        visitor.visit(parser.file());
+        var parser = new CalcPartOneParser(commonTokenStream);
+        var visitor = new CalcPartOneVisitorImpl();
+        return Long.parseLong(visitor.visitStart(parser.start()).toString());
     }
+
+    private long evaluateTwo(String expr) {
+        var markupLexer = new CalcPartTwoLexer(CharStreams.fromString(expr));
+        var commonTokenStream = new CommonTokenStream(markupLexer);
+        var parser = new CalcPartTwoParser(commonTokenStream);
+        var visitor = new CalcPartTwoVisitorImpl();
+        return Long.parseLong(visitor.visitStart(parser.start()).toString());
+    }
+
 }
