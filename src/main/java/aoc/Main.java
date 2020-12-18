@@ -11,7 +11,7 @@ public class Main {
 
         Stream.iterate(firstDay, i -> i + 1)
                 .limit(lastDay - firstDay + 1)
-                .forEach(day -> runDay(year, day.toString()));
+                .forEach(day -> runDay(year, String.format("%02d", day)));
     }
 
     private static void runDay(String yearString, String dayString) {
