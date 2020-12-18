@@ -4,7 +4,7 @@ import java.util.stream.Stream;
 
 public class Main {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         var year = args[0];
         var firstDay = Long.parseLong(args[1]);
         var lastDay = args.length == 3 ? Long.parseLong(args[2]) : firstDay;
