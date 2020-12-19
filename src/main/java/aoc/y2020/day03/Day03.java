@@ -1,10 +1,10 @@
 package aoc.y2020.day03;
 
 import aoc.Day;
+import io.vavr.Tuple2;
 
 import java.util.stream.Stream;
 
-import static groovy.lang.Tuple.tuple;
 
 public class Day03 extends Day {
 
@@ -25,9 +25,9 @@ public class Day03 extends Day {
     private Long crashes(int right, int down) {
         int w = input.get(0).length();
         int h = input.size();
-        return Stream.iterate(tuple(0, 0), t -> tuple((t.getV1()+right)%w, (t.getV2()+down)%h))
+        return Stream.iterate(new Tuple2<>(0, 0), t -> new Tuple2<>((t._1+right)%w, (t._2+down)%h))
                 .limit(h/down)
-                .map(t -> input.get(t.getV2()).charAt(t.getV1()))
+                .map(t -> input.get(t._2).charAt(t._1))
                 .filter(c -> c == '#')
                 .count();
     }
