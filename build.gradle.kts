@@ -20,6 +20,12 @@ dependencies {
     implementation("commons-codec:commons-codec:1.15")
 }
 
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(15))
+    }
+}
+
 tasks.generateGrammarSource {
     maxHeapSize = "64m"
     arguments.addAll(listOf("-package", "aoc.y2020.day18.parser", "-visitor"))
