@@ -1,8 +1,10 @@
 package aoc.y2020.day04;
 
 import aoc.Day;
+import aoc.y2020.Utils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Day04 extends Day {
 
@@ -23,19 +25,12 @@ public class Day04 extends Day {
     }
 
     @Override
-    public void setup(String path) {
+    public void setup(String path) throws Exception {
         super.setup(path);
 
-        List<String> current = new ArrayList<>();
-        for (var line: this.input) {
-            if (line.length() == 0) {
-                passports.add(Passport.fromFields(current));
-                current = new ArrayList<>();
-            } else {
-                current.addAll(Arrays.asList(line.split(" ")));
-            }
-        }
-        passports.add(Passport.fromFields(current));
+        passports = Utils.partitionByEmptyLine(input)
+                .map(Passport::fromFields)
+                .collect(Collectors.toSet());
     }
 
 }

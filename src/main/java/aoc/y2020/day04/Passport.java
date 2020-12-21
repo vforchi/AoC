@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @AllArgsConstructor
 public class Passport {
@@ -16,6 +17,7 @@ public class Passport {
 
     public static Passport fromFields(List<String> fieldList) {
         var fields = fieldList.stream()
+                .flatMap(l -> Stream.of(l.split(" ")))
                 .map(f -> f.split(":"))
                 .collect(Collectors.toMap(
                         l -> l[0],

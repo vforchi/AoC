@@ -1,6 +1,7 @@
 package aoc.y2020.day06;
 
 import aoc.Day;
+import aoc.y2020.Utils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -47,22 +48,24 @@ public class Day06 extends Day {
     }
 
     @Override
-    public void setup(String path) {
+    public void setup(String path) throws Exception {
         super.setup(path);
 
-        List<List<String>> current = new ArrayList<>();
-        for (var line: this.input) {
-            if (line.length() == 0) {
-                answersGroups.add(current);
-                current = new ArrayList<>();
-            } else {
-                var answer = line.chars().boxed()
-                        .map(String::valueOf)
-                        .collect(Collectors.toList());
-                current.add(answer);
-            }
-        }
-        answersGroups.add(current);
+        answersGroups = Utils.partitionByEmptyLine(input)
+                .map(Day06::toAnswerGroup)
+                .collect(Collectors.toList());
+    }
+
+    private static List<List<String>> toAnswerGroup(List<String> lines) {
+        return lines.stream()
+                .map(Day06::splitAnswers)
+                .collect(Collectors.toList());
+    }
+
+    private static List<String> splitAnswers(String line) {
+        return line.chars().boxed()
+                .map(String::valueOf)
+                .collect(Collectors.toList());
     }
     
 }
