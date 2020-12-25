@@ -1,6 +1,6 @@
 Solutions of Advent of Code 2020.
 
-The code is java 15 with vavr, apache commons and guava.
+The code is in java 15 with vavr, apache commons and guava.
 
 You can run a specific day like this:
 `./gradlew run --args="2020 4"`
