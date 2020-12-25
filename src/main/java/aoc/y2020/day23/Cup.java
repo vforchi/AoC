@@ -11,4 +11,8 @@ class Cup {
     public Cup(int value) {
         this.value = value;
     }
+
+    public Long getLabel() {
+        return value.longValue() + 1;
+    }
 }

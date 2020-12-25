@@ -11,21 +11,23 @@ public class CupsGame {
     private Cup currentCup;
 
     public CupsGame(List<Integer> firstCups, int size) {
-        allCups = IntStream.range(1, size+1).boxed()
+        allCups = IntStream.range(0, size).boxed()
                 .map(Cup::new)
                 .collect(Collectors.toList());
 
         Cup current = null;
-        for (int i = 0; i < size; i++) {
-            int idx = i < firstCups.size() ? firstCups.get(i) : i+1;
-            current = addCup(current, idx);
+        for (var val: firstCups) {
+            current = addCup(current, val - 1);
+        }
+        for (int i = firstCups.size(); i < size; i++) {
+            current = addCup(current, i);
         }
 
-        currentCup = getCup(firstCups.get(0));
+        currentCup = allCups.get(firstCups.get(0) - 1);
     }
 
     public Cup addCup(Cup position, int value) {
-        Cup cup = getCup(value);
+        Cup cup = allCups.get(value);
 
         if (position == null) {
             cup.next = cup;
@@ -77,31 +79,25 @@ public class CupsGame {
 
     private Cup calcDestination(Integer currentValue, List<Cup> cupsToMove) {
         var avoid = cupsToMove.stream().map(Cup::getValue).collect(Collectors.toList());
-        var candidate = (currentValue > 1) ? currentValue - 1 : allCups.size();
-        while (avoid.contains(candidate)) {
-            candidate--;
-            if (candidate == 0) {
-                candidate = allCups.size();
+        do {
+            if (--currentValue < 0) {
+                currentValue = allCups.size() - 1;
             }
-        }
-        return getCup(candidate);
+        } while (avoid.contains(currentValue));
+        return allCups.get(currentValue);
     }
 
     @Override
     public String toString() {
         var buf = new StringBuilder();
 
-        var current = getCup(1).next;
+        var current = allCups.get(0).next;
         do {
-            buf.append(current.value);
+            buf.append(current.value + 1);
             current = current.next;
-        } while (current != getCup(1));
+        } while (current != allCups.get(0));
 
         return buf.toString();
-    }
-
-    public int size() {
-        return allCups.size();
     }
 
 }

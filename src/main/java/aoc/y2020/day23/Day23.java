@@ -25,7 +25,7 @@ public class Day23 extends Day {
         getStartingCups(1000000);
         IntStream.range(0, 10000000).forEach(i -> cups.nextRound());
         var one = cups.getCup(1);
-        return one.next.value.longValue() * one.next.next.value.longValue();
+        return one.next.getLabel() * one.next.next.getLabel();
     }
 
     @Override
@@ -34,7 +34,7 @@ public class Day23 extends Day {
 
     private void getStartingCups(int size) {
         var firstValues = Arrays.stream(first10.split(""))
-                .map(Integer::valueOf)
+                .map(Integer::parseInt)
                 .collect(Collectors.toList());
 
         cups = new CupsGame(firstValues, size);
