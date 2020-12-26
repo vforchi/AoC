@@ -51,7 +51,7 @@ public class Day10 extends Day {
 	}
 
 	@Override
-	public void setup(String path) throws Exception {
+	public void setup(String path) {
 		super.setup(path);
 
 		var adaptersStream = Stream.ofAll(input)

@@ -38,8 +38,4 @@ public class Day15 extends Day {
 		return nextNumber;
 	}
 
-	@Override
-	public void setup(String path) throws Exception {
-	}
-
 }

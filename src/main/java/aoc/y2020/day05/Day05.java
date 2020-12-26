@@ -30,7 +30,7 @@ public class Day05 extends Day {
     }
 
     @Override
-    public void setup(String path) throws Exception {
+    public void setup(String path) {
         super.setup(path);
 
         tickets = input.stream()

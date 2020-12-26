@@ -26,7 +26,7 @@ public class Day21 extends Day {
     }
 
     @Override
-    public void setup(String path) throws Exception {
+    public void setup(String path) {
         super.setup(path);
 
         var foods = this.input.stream()

@@ -48,7 +48,7 @@ public class Day06 extends Day {
     }
 
     @Override
-    public void setup(String path) throws Exception {
+    public void setup(String path) {
         super.setup(path);
 
         answersGroups = Utils.partitionByEmptyLine(input)

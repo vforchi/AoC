@@ -28,10 +28,6 @@ public class Day23 extends Day {
         return one.next.getLabel() * one.next.next.getLabel();
     }
 
-    @Override
-    public void setup(String path) throws Exception {
-    }
-
     private void getStartingCups(int size) {
         var firstValues = Arrays.stream(first10.split(""))
                 .map(Integer::parseInt)

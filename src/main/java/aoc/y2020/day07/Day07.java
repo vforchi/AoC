@@ -45,8 +45,9 @@ public class Day07 extends Day {
     }
 
     @Override
-    public void setup(String path) throws Exception {
+    public void setup(String path) {
         super.setup(path);
+
         this.bags = this.input.stream()
                 .map(Bag::fromString)
                 .collect(Collectors.toList());

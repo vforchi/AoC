@@ -48,8 +48,4 @@ public class Day25 extends Day {
         return "Nothing do do";
     }
 
-    @Override
-    public void setup(String path) throws Exception {
-    }
-
 }
