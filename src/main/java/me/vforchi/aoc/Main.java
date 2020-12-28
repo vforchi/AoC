@@ -9,18 +9,19 @@ public class Main {
         var firstDay = Long.parseLong(args[1]);
         var lastDay = args.length == 3 ? Long.parseLong(args[2]) : firstDay;
 
+        var start = System.currentTimeMillis();
         Stream.iterate(firstDay, i -> i + 1)
                 .limit(lastDay - firstDay + 1)
                 .forEach(day -> runDay(year, String.format("%02d", day)));
+        System.out.printf("Total execution time: %1.3f[s]", 0.001 * (System.currentTimeMillis() - start));
     }
 
     private static void runDay(String yearString, String dayString) {
         try {
             var className = String.format("me.vforchi.aoc.y%s.day%s.Day%s", yearString, dayString, dayString);
             Day day = (Day) Class.forName(className).getDeclaredConstructor().newInstance();
-            day.setup(String.format("input/%s/day%s.txt", yearString, dayString));
-
             var start = System.currentTimeMillis();
+            day.setup(String.format("input/%s/day%s.txt", yearString, dayString));
 
             var resultOne = day.partOne().toString();
             var durationOne = System.currentTimeMillis() - start;
