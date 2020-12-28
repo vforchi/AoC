@@ -1,6 +1,7 @@
 package aoc.y2020.day14;
 
 import aoc.Day;
+import aoc.y2020.Utils;
 import io.vavr.Tuple2;
 import org.apache.commons.lang3.StringUtils;
 
@@ -117,10 +118,7 @@ public class Day14 extends Day {
 	}
 
 	private static Long characterListToDecValue(List<Integer> value) {
-		var stringValue = value.stream()
-				.map(i -> String.valueOf((char) i.intValue()))
-				.collect(Collectors.joining());
-		return Long.parseLong(stringValue, 2);
+		return Long.parseLong(Utils.characterListToString(value), 2);
 	}
 
 }
