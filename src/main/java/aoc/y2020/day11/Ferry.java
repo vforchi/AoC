@@ -13,10 +13,11 @@ class Ferry {
     static int emptySeat = 'L';
     static int occupiedSeat = '#';
 
-    List<Integer> previousSeats;
     List<Integer> seats;
     int numRows;
     int numColumns;
+
+    boolean seatsStable;
 
     boolean longSearch;
     int occupiedSeatsLimit;
@@ -31,23 +32,21 @@ class Ferry {
     }
 
     public long play() {
-        while (!this.isStable()) {
+        while (!seatsStable) {
             this.next();
         }
         return countOccupiedSeats(this.seats);
     }
 
-    public boolean isStable() {
-        return ListUtils.isEqualList(seats, previousSeats);
-    }
-
     public void next() {
-        this.previousSeats = this.seats;
-        this.seats = IntStream.range(0, numRows)
+        var newSeats = IntStream.range(0, numRows)
                 .flatMap(r -> IntStream.range(0, numColumns)
                         .map(c -> nextSeat(r, c)))
                 .boxed()
                 .collect(Collectors.toList());
+
+        this.seatsStable = ListUtils.isEqualList(seats, newSeats);
+        this.seats = newSeats;
     }
 
     int nextSeat(int r, int c) {
@@ -105,7 +104,7 @@ class Ferry {
                 .count();
     }
 
-    static Ferry fromText(List<String> lines, boolean longSearch, int occupiedSeatsLimit) {
+    public static Ferry fromText(List<String> lines, boolean longSearch, int occupiedSeatsLimit) {
         var seats = lines.stream()
                 .flatMap(line -> line.chars().boxed())
                 .collect(Collectors.toList());
