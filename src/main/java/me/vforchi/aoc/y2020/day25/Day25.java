@@ -1,46 +1,36 @@
 package me.vforchi.aoc.y2020.day25;
 
 import me.vforchi.aoc.Day;
-import io.vavr.Tuple2;
-import io.vavr.collection.Stream;
-
-import java.util.function.Function;
 
 public class Day25 extends Day {
 
-    private final Long cardPublicKey = 2069194L;
-    private final Long doorPublicKey = 16426071L;
+    private final int divisor = 20201227;
+
+    private final int cardPublicKey = 2069194;
+    private final int doorPublicKey = 16426071;
 
     @Override
     public Object partOne() {
         var cardLoopSize = findLoopSize(cardPublicKey);
-        var doorLoopSize = findLoopSize(doorPublicKey);
-        var cardEncryptionKey = transform(cardPublicKey, doorLoopSize);
-        var doorEncryptionKey = transform(doorPublicKey, cardLoopSize);
-        if (!cardEncryptionKey.equals(doorEncryptionKey)) {
-            throw new RuntimeException("Must be the same");
+        return transform(doorPublicKey, cardLoopSize);
+    }
+
+    private int findLoopSize(int publicKey) {
+        int value = 1;
+        int loopSize = 0;
+        while (value != publicKey) {
+            value = (value * 7) % divisor;
+            loopSize++;
         }
-        return doorEncryptionKey;
+        return loopSize;
     }
 
-    private Integer findLoopSize(Long publicKey) {
-        return Stream.iterate(1L, transformer(7L))
-                .zipWithIndex()
-                .find(t -> t._1.equals(publicKey))
-                .map(Tuple2::_2)
-                .getOrElseThrow(() -> new RuntimeException("Not found"));
-    }
-
-    private Long transform(Long subject, Integer doorLoopSize) {
-        return Stream.iterate(1L, transformer(subject))
-                .toJavaStream()
-                .skip(doorLoopSize)
-                .findFirst()
-                .orElseThrow();
-    }
-
-    private Function<Long, Long> transformer(Long subject) {
-        return l -> (l * subject) % 20201227;
+    private long transform(int subject, int doorLoopSize) {
+        long value = 1L;
+        for (int i = 0; i < doorLoopSize; i++) {
+            value = (value * subject) % divisor;
+        }
+        return value;
     }
 
     @Override
