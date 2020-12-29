@@ -3,10 +3,7 @@ package me.vforchi.aoc.y2020.day20;
 import me.vforchi.aoc.Day;
 import me.vforchi.aoc.y2020.Utils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -53,13 +50,14 @@ public class Day20 extends Day {
             }
         }
 
-        return image.pixels.stream()
-                .flatMap(l -> l.stream().filter(p -> p))
-                .count();
+        return Arrays.stream(image.pixels).sequential()
+                .map(l -> new String(l).replaceAll("\\.", ""))
+                .mapToInt(String::length)
+                .sum();
     }
 
     private boolean removeSeaMonsters(Tile image) {
-        var size = image.pixels.size();
+        var size = image.pixels.length;
         var found = true;
         for (int i = 0; i < size - 2; i++) {
             for (int j = 0; j < size - seaMonster.size() - 1; j++) {
@@ -80,34 +78,37 @@ public class Day20 extends Day {
 
     private boolean findSeaMonster(Tile image, int row, int col) {
         return seaMonster.stream()
-                .allMatch(p -> image.pixels.get(row+p.get(0)).get(col+p.get(1)));
+                .allMatch(p -> image.pixels[row+p.get(0)][col+p.get(1)] == '#');
     }
 
     private void removeSeaMonster(Tile image, int row, int col) {
-        seaMonster.forEach(p -> image.pixels.get(row+p.get(0)).set(col+p.get(1), false));
+        seaMonster.forEach(p -> image.pixels[row+p.get(0)][col+p.get(1)] = '.');
     }
 
     private Tile combineTiles(List<Tile> tiles) {
-        List<List<Boolean>> combined = new ArrayList<>();
+        double tilesPerRow = Math.sqrt(tiles.size());
+        int sizeCombined = (int) tilesPerRow * (tiles.get(0).size - 2);
+        char[][] combined = new char[sizeCombined][sizeCombined];
 
-        var left = tiles.stream()
+        var leftTile = tiles.stream()
                 .filter(Tile::isTopLeftCorner)
                 .findFirst().orElseThrow();
 
-        while (left != null) {
-            var rows = left.stripBorders();
-            var col = left;
-            while (col.connections.containsKey(RIGHT)) {
+        for (int posX = 0; posX < tilesPerRow; posX++) {
+            var col = leftTile;
+            for (int posY = 0; posY < tilesPerRow; posY++) {
+                copyTile(col.stripBorders(), combined, posX, posY);
                 col = col.connections.get(RIGHT);
-                var toAdd = col.stripBorders();
-                for (int i = 0; i < rows.size(); i++) {
-                    rows.get(i).addAll(toAdd.get(i));
-                }
             }
-            combined.addAll(rows);
-            left = left.connections.get(BOTTOM);
+            leftTile = leftTile.connections.get(BOTTOM);
         }
         return new Tile(0L, combined);
+    }
+
+    private static void copyTile(char[][] tile, char[][] combined, int posX, int posY) {
+        for (int row = 0; row < tile.length; row++) {
+            System.arraycopy(tile[row], 0, combined[posX*tile.length + row], posY*tile.length, tile.length);
+        }
     }
 
     @Override

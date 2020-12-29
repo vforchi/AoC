@@ -5,9 +5,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static io.vavr.collection.Stream.ofAll;
 
 public class Tile {
 
@@ -26,14 +23,16 @@ public class Tile {
     public final int size;
 
     Long id;
-    List<List<Boolean>> pixels;
+    char[][] pixels;
+    String[] sides = new String[4];
 
     Map<Direction, Tile> connections = new HashMap<>();
 
-    public Tile(Long id, List<List<Boolean>> pixels) {
+    public Tile(Long id, char[][] pixels) {
         this.id = id;
         this.pixels = pixels;
-        this.size = pixels.size();
+        this.size = pixels.length;
+        updateSides();
     }
 
     public Optional<Tile> placeTile(Integer side, Tile tile) {
@@ -66,43 +65,44 @@ public class Tile {
     }
 
     public String getSide(int idx) {
-        Stream<Boolean> side;
-        switch (idx) {
-            case 0 -> side = pixels.get(0).stream();
-            case 1 -> side = pixels.stream()
-                    .map(l -> l.get(size - 1));
-            case 2 -> side = ofAll(pixels.get(size - 1))
-                    .reverse()
-                    .toJavaStream();
-            case 3 -> side = ofAll(pixels)
-                    .reverse()
-                    .map(l -> l.get(0))
-                    .toJavaStream();
-            default -> side = Stream.of(false);
+        return sides[idx];
+    }
+
+    public void updateSides() {
+        sides[0] = new String(pixels[0]);
+        var right = new StringBuilder();
+        for (int i = 0; i < size; i++) {
+            right.append(pixels[i][size - 1]);
         }
-        return side.map(p -> p ? "#" : ".")
-                .collect(Collectors.joining());
+        sides[1] = right.toString();
+        sides[2] = StringUtils.reverse(new String(pixels[size - 1]));
+        var left = new StringBuilder();
+        for (int i = 0; i < size; i++) {
+            left.append(pixels[size - 1 - i][0]);
+        }
+        sides[3] = left.toString();
     }
 
     public void rotate() {
-        transpose();
-        flip();
-    }
-
-    public void transpose() {
-        List<List<Boolean>> newPixels = new ArrayList<>();
+        char[][] newPixels = new char[size][size];
         for (int i = 0; i < size; i++) {
-            var newRow = new ArrayList<Boolean>();
             for (int j = 0; j < size; j++) {
-                newRow.add(j, pixels.get(j).get(i));
+                newPixels[i][j] = pixels[size - 1 - j][i];
             }
-            newPixels.add(newRow);
         }
         pixels = newPixels;
+        updateSides();
     }
 
     public void flip() {
-        pixels.forEach(Collections::reverse);
+        char[][] newPixels = new char[size][size];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                newPixels[i][j] = pixels[i][size - 1 - j];
+            }
+        }
+        pixels = newPixels;
+        updateSides();
     }
 
     private void setConnection(Integer side, Tile tile) {
@@ -119,17 +119,19 @@ public class Tile {
         return SetUtils.isEqualSet(connections.keySet(), Set.of(Direction.RIGHT, Direction.BOTTOM));
     }
 
-    public List<List<Boolean>> stripBorders() {
-         return pixels.subList(1, size - 1).stream()
-                .map(l -> l.subList(1, size - 1))
-                .collect(Collectors.toList());
+    public char[][] stripBorders() {
+        var stripped = new char[size - 2][size - 2];
+        for (int i = 1; i < size - 1; i++) {
+            System.arraycopy(pixels[i], 1, stripped[i - 1], 0, size - 2);
+        }
+        return stripped;
     }
 
     public static Tile fromLines(List<String> lines) {
         var id = Long.parseLong(lines.remove(0).substring(5, 9));
         var pixels = lines.stream()
-                .map(Tile::stringToBooleanList)
-                .collect(Collectors.toList());
+                .map(String::toCharArray)
+                .toArray(char[][]::new);
         return new Tile(id, pixels);
     }
 
@@ -141,11 +143,14 @@ public class Tile {
 
     @Override
     public String toString() {
-        var buf = "Id: " + id + "\n";
-        var body = pixels.stream()
-                .map(Tile::convertLine)
-                .collect(Collectors.joining("\n"));
-        return buf + body;
+        var buf = new StringBuilder("Id: " + id + "\n");
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                buf.append(pixels[i][j]);
+            }
+            buf.append("\n");
+        }
+        return buf.toString();
     }
 
     public static String convertLine(List<Boolean> line) {
