@@ -1,8 +1,9 @@
 package me.vforchi.aoc.y2020.day17;
 
-import me.vforchi.aoc.Day;
 import com.google.common.collect.Sets;
 import io.vavr.Tuple2;
+import me.vforchi.aoc.Day;
+import org.apache.commons.collections4.ListUtils;
 
 import java.util.List;
 import java.util.Set;
@@ -13,8 +14,11 @@ import static io.vavr.collection.Stream.ofAll;
 
 public class Day17 extends Day {
 
-    private static Set<Integer> steps = Set.of(-1, 0, 1);
-    private static Set<List<Integer>> cartesianProduct = Sets.cartesianProduct(List.of(steps, steps, steps, steps));
+    private static final Set<Integer> steps = Set.of(-1, 0, 1);
+    private static final Set<List<Integer>> cartesianProduct = Sets.cartesianProduct(List.of(steps, steps, steps, steps))
+            .stream()
+            .filter(l -> !ListUtils.isEqualList(l, List.of(0, 0, 0, 0)))
+            .collect(Collectors.toSet());
 
     @Override
     public Object partOne() {
@@ -51,13 +55,8 @@ public class Day17 extends Day {
 
     private Stream<Cube> getInactiveNeighbours(Cube cube, List<Cube> activeCubes) {
         return cartesianProduct.stream()
-                .filter(this::notAllZero)
                 .map(cube::offset)
                 .filter(c -> !activeCubes.contains(c));
-    }
-
-    private boolean notAllZero(List<Integer> l) {
-        return l.stream().filter(i -> i == 0).count() != 4;
     }
 
     private boolean staysActive(Cube cube, List<Cube> activeCubes) {
