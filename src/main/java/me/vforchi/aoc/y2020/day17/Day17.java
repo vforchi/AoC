@@ -13,6 +13,9 @@ import static io.vavr.collection.Stream.ofAll;
 
 public class Day17 extends Day {
 
+    private static Set<Integer> steps = Set.of(-1, 0, 1);
+    private static Set<List<Integer>> cartesianProduct = Sets.cartesianProduct(List.of(steps, steps, steps, steps));
+
     @Override
     public Object partOne() {
         return solve(6, false);
@@ -47,8 +50,7 @@ public class Day17 extends Day {
     }
 
     private Stream<Cube> getInactiveNeighbours(Cube cube, List<Cube> activeCubes) {
-        var steps = Set.of(-1, 0, 1);
-        return Sets.cartesianProduct(List.of(steps, steps, steps, steps)).stream()
+        return cartesianProduct.stream()
                 .filter(this::notAllZero)
                 .map(cube::offset)
                 .filter(c -> !activeCubes.contains(c));
