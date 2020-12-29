@@ -16,39 +16,41 @@ public class Day19 extends Day {
 
     @Override
     public Object partOne() {
-        return this.messages.stream()
-                .filter(this::matchesRule0)
-                .count();
-    }
+        var pattern = Pattern.compile(getRuleRegex(0));
 
-    public boolean matchesRule0(String message) {
-        return message.matches(getRuleRegex(0));
+        return this.messages.stream()
+                .filter(s -> pattern.matcher(s).matches())
+                .count();
     }
 
     @Override
     public Object partTwo() {
-        return this.messages.stream()
-                .filter(this::matchesRules42And31)
-                .count();
-    }
-
-    public boolean matchesRules42And31(String message) {
         var regex42 = this.getRuleRegex(42);
         var regex31 = this.getRuleRegex(31);
         var regex = String.format("(%s+)(%s+)", regex42, regex31);
 
-        var m = Pattern.compile(regex).matcher(message);
+        var pattern42 = Pattern.compile(regex42);
+        var pattern31 = Pattern.compile(regex31);
+        var pattern = Pattern.compile(regex);
+
+        return this.messages.stream()
+                .filter(s -> matchesRules42And31(s, pattern, pattern42, pattern31))
+                .count();
+    }
+
+    public boolean matchesRules42And31(String message, Pattern pattern, Pattern pattern42, Pattern pattern31) {
+        var m = pattern.matcher(message);
         if (m.matches()) {
-            return countMatches(regex42, m.group(1)) > countMatches(regex31, m.group(2));
+            return countMatches(pattern42, m.group(1)) > countMatches(pattern31, m.group(2));
         } else {
             return false;
         }
     }
 
-    private int countMatches(String regex, String matchGroup) {
+    private int countMatches(Pattern pattern, String matchGroup) {
         int matches = 0;
-        var m = Pattern.compile(regex).matcher(matchGroup);
-        while(m.find()) {
+        var m = pattern.matcher(matchGroup);
+        while (m.find()) {
             matches++;
         }
         return matches;
