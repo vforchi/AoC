@@ -1,6 +1,7 @@
 package me.vforchi.aoc.y2020.day07;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,6 +14,7 @@ public class Bag {
 
     private static Pattern pattern = Pattern.compile("([a-z ]+) contain ([0-9a-z, ]+)+\\.");
 
+    @Getter
     String color;
     Map<String, Integer> containedBags;
 
