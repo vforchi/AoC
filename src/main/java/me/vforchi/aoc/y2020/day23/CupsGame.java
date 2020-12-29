@@ -2,18 +2,14 @@ package me.vforchi.aoc.y2020.day23;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class CupsGame {
 
-    private List<Cup> allCups;
+    private Cup[] allCups;
     private Cup currentCup;
 
     public CupsGame(List<Integer> firstCups, int size) {
-        allCups = IntStream.range(0, size).boxed()
-                .map(Cup::new)
-                .collect(Collectors.toList());
+        allCups = new Cup[size];
 
         Cup current = null;
         for (var val: firstCups) {
@@ -23,11 +19,12 @@ public class CupsGame {
             current = addCup(current, i);
         }
 
-        currentCup = allCups.get(firstCups.get(0) - 1);
+        currentCup = allCups[firstCups.get(0) - 1];
     }
 
     public Cup addCup(Cup position, int value) {
-        Cup cup = allCups.get(value);
+        Cup cup = new Cup(value);
+        allCups[value] = cup;
 
         if (position == null) {
             cup.next = cup;
@@ -44,7 +41,7 @@ public class CupsGame {
     }
 
     public Cup getCup(int searchValue) {
-        return allCups.get(searchValue - 1);
+        return allCups[searchValue - 1];
     }
 
     public void nextRound() {
@@ -78,25 +75,25 @@ public class CupsGame {
     }
 
     private Cup calcDestination(Integer currentValue, List<Cup> cupsToMove) {
-        var avoid = cupsToMove.stream().map(Cup::getValue).collect(Collectors.toList());
+        var value1 = cupsToMove.get(0).value;
+        var value2 = cupsToMove.get(1).value;
+        var value3 = cupsToMove.get(2).value;
         do {
             if (--currentValue < 0) {
-                currentValue = allCups.size() - 1;
+                currentValue = allCups.length - 1;
             }
-        } while (avoid.contains(currentValue));
-        return allCups.get(currentValue);
+        } while (currentValue == value1 || currentValue == value2 || currentValue == value3);
+        return allCups[currentValue];
     }
 
     @Override
     public String toString() {
         var buf = new StringBuilder();
-
-        var current = allCups.get(0).next;
+        var current = allCups[0].next;
         do {
             buf.append(current.value + 1);
             current = current.next;
-        } while (current != allCups.get(0));
-
+        } while (current != allCups[0]);
         return buf.toString();
     }
 
