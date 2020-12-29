@@ -15,8 +15,7 @@ public class Day15 extends Day {
 	}
 
 	private static Integer getNumber(int size) {
-//		Map<Integer, Integer> numbers = new HashMap<>(Map.of(16, 1, 11, 2, 15, 3, 0, 4, 1, 5));
-		Integer[] numbers = new Integer[size];
+		int[] numbers = new int[size];
 		numbers[16] = 1;
 		numbers[11] = 2;
 		numbers[15] = 3;
@@ -32,11 +31,10 @@ public class Day15 extends Day {
 		return nextNumber;
 	}
 
-	private static int next(Integer[] numbers, int lastNumber, int round) {
+	private static int next(int[] numbers, int lastNumber, int round) {
 		var lastNumberRound = numbers[lastNumber];
-		var nextNumber = (lastNumberRound == null) ? 0 : (round - lastNumberRound);
 		numbers[lastNumber] = round;
-		return nextNumber;
+		return (lastNumberRound == 0) ? 0 : (round - lastNumberRound);
 	}
 
 }
