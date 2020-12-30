@@ -8,4 +8,4 @@ You can run a specific day like this:
 or a range of days like this:
 `./gradlew run --args="2020 1 6"`
 
-All days together run in around 6 seconds.
+All days together run in around 5 seconds.

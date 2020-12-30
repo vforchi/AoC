@@ -1,12 +1,10 @@
 package me.vforchi.aoc.y2020.day17;
 
-import com.google.common.collect.Sets;
 import io.vavr.Tuple2;
 import me.vforchi.aoc.Day;
-import org.apache.commons.collections4.ListUtils;
 
-import java.util.List;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -14,67 +12,50 @@ import static io.vavr.collection.Stream.ofAll;
 
 public class Day17 extends Day {
 
-    private static final Set<Integer> steps = Set.of(-1, 0, 1);
-    private static final Set<List<Integer>> cartesianProduct = Sets.cartesianProduct(List.of(steps, steps, steps, steps))
-            .stream()
-            .filter(l -> !ListUtils.isEqualList(l, List.of(0, 0, 0, 0)))
-            .collect(Collectors.toSet());
-
     @Override
     public Object partOne() {
-        return solve(6, false);
+        return solve(false);
     }
 
     @Override
     public Object partTwo() {
-        return solve(6, true);
+        return solve(true);
     }
 
-    private Object solve(int steps, boolean fourDim) {
+    private Object solve(boolean fourDim) {
         return Stream.iterate(getActiveCubes(input, fourDim), this::nextStep)
-                .skip(steps)
+                .skip(6)
                 .findFirst()
-                .map(List::size)
+                .map(Collection::size)
                 .orElseThrow();
     }
 
-    private List<Cube> nextStep(List<Cube> activeCubes) {
-        List<Cube> stayActiveCubes = activeCubes.stream()
-                .filter(c -> staysActive(c, activeCubes))
-                .collect(Collectors.toList());
-
-        List<Cube> becomeActiveCubes = activeCubes.stream()
-                .flatMap(c -> getInactiveNeighbours(c, activeCubes))
-                .distinct()
-                .filter(c -> becomesActive(c, activeCubes))
-                .collect(Collectors.toList());
-
-        stayActiveCubes.addAll(becomeActiveCubes);
-        return stayActiveCubes;
+    private Collection<Cube> nextStep(Collection<Cube> activeCubes) {
+        var gridDim = GridDimensions.gridFromCubes(activeCubes);
+        Collection<Cube> newActiveCubes = new ArrayList<>();
+        for (int x = gridDim.minx; x < gridDim.maxx; x++) {
+            for (int y = gridDim.miny; y < gridDim.maxy; y++) {
+                for (int z = gridDim.minz; z < gridDim.maxz; z++) {
+                    if (gridDim.minw == null) {
+                        var cube = new Cube(x, y, z, null);
+                        if (cube.checkCubeNewStatus(activeCubes)) {
+                            newActiveCubes.add(cube);
+                        }
+                    } else {
+                        for (int w = gridDim.minw; w < gridDim.maxw; w++) {
+                            var cube = new Cube(x, y, z, w);
+                            if (cube.checkCubeNewStatus(activeCubes)) {
+                                newActiveCubes.add(cube);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return newActiveCubes;
     }
 
-    private Stream<Cube> getInactiveNeighbours(Cube cube, List<Cube> activeCubes) {
-        return cartesianProduct.stream()
-                .map(cube::offset)
-                .filter(c -> !activeCubes.contains(c));
-    }
-
-    private boolean staysActive(Cube cube, List<Cube> activeCubes) {
-        long active = getActiveAdjacent(cube, activeCubes);
-        return (active == 2 || active == 3);
-    }
-
-    private boolean becomesActive(Cube cube, List<Cube> activeCubes) {
-        return (getActiveAdjacent(cube, activeCubes) == 3);
-    }
-
-    private long getActiveAdjacent(Cube cube, List<Cube> activeCubes) {
-        return activeCubes.stream()
-                .filter(c -> c.isAdjacent(cube))
-                .count();
-    }
-
-    private List<Cube> getActiveCubes(List<String> input, boolean fourDim) {
+    private Collection<Cube> getActiveCubes(Collection<String> input, boolean fourDim) {
         return ofAll(input)
                 .zipWithIndex()
                 .flatMap(tuple -> makeCubes(tuple._1, tuple._2, fourDim))
