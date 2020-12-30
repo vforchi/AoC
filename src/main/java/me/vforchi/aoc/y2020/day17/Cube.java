@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Objects;
 
 @NoArgsConstructor
@@ -15,16 +15,6 @@ public class Cube {
     public int y;
     public int z;
     public Integer w;
-
-    public Cube offset(List<Integer> coords) {
-        var cube = new Cube();
-        cube.x = this.x + coords.get(0);
-        cube.y = this.y + coords.get(1);
-        cube.z = this.z + coords.get(2);
-        if (this.w != null)
-            cube.w = this.w + coords.get(3);
-        return cube;
-    }
 
     public boolean isAdjacent(Cube cube) {
         return Math.abs(this.x - cube.x) <= 1 &&
@@ -37,6 +27,25 @@ public class Cube {
     @Override
     public String toString() {
         return String.format("%s,%s,%s,%s", this.x, this.y, this.z, this.w);
+    }
+
+    public boolean checkCubeNewStatus(Collection<Cube> activeCubes) {
+        var isActive = activeCubes.contains(this);
+        var activeNeighbours = getActiveAdjacent(activeCubes);
+        if (isActive && (activeNeighbours == 2 || activeNeighbours == 3)) {
+            return true;
+        } else if (!isActive && activeNeighbours == 2) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private long getActiveAdjacent(Collection<Cube> activeCubes) {
+        return activeCubes.stream()
+                .filter(this::isAdjacent)
+                .limit(4)
+                .count();
     }
 
 }
