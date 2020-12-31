@@ -29,7 +29,7 @@ public class Day18 extends Day {
         var commonTokenStream = new CommonTokenStream(markupLexer);
         var parser = new CalcPartOneParser(commonTokenStream);
         var visitor = new CalcPartOneVisitorImpl();
-        return Long.parseLong(visitor.visitStart(parser.start()).toString());
+        return visitor.visitStart(parser.start());
     }
 
     private long evaluateTwo(String expr) {
@@ -37,7 +37,7 @@ public class Day18 extends Day {
         var commonTokenStream = new CommonTokenStream(markupLexer);
         var parser = new CalcPartTwoParser(commonTokenStream);
         var visitor = new CalcPartTwoVisitorImpl();
-        return Long.parseLong(visitor.visitStart(parser.start()).toString());
+        return visitor.visitStart(parser.start());
     }
 
 }
