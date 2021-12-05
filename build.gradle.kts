@@ -12,14 +12,14 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.projectlombok:lombok:1.18.16")
-    annotationProcessor("org.projectlombok:lombok:1.18.16")
+    compileOnly("org.projectlombok:lombok:1.18.22")
+    annotationProcessor("org.projectlombok:lombok:1.18.22")
 
-    antlr("org.antlr:antlr4:4.7.2")
-    implementation("com.google.guava:guava:30.1-jre")
-    implementation("io.vavr:vavr:0.10.3")
+    antlr("org.antlr:antlr4:4.9.3")
+    implementation("com.google.guava:guava:31.0.1-jre")
+    implementation("io.vavr:vavr:0.10.4")
     implementation("commons-codec:commons-codec:1.15")
-    implementation("org.apache.commons:commons-lang3:3.11")
+    implementation("org.apache.commons:commons-lang3:3.12.0")
     implementation("org.apache.commons:commons-collections4:4.4")
 }
 

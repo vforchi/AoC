@@ -1,6 +1,6 @@
-Solutions of Advent of Code 2020.
+Solutions of Advent of Code.
 
-The code is in java 15 with vavr, apache commons and guava.
+The code is in java 17 with vavr, apache commons and guava.
 
 You can run a specific day like this:
 `./gradlew run --args="2020 4"`
@@ -8,4 +8,4 @@ You can run a specific day like this:
 or a range of days like this:
 `./gradlew run --args="2020 1 6"`
 
-All days together run in around 5 seconds.
+All days of 2020 run in around 5 seconds.
