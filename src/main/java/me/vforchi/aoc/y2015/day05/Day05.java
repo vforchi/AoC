@@ -14,11 +14,6 @@ public class Day05 extends Day {
     private static final Pattern repeatedPattern = Pattern.compile("([a-z]).\\1");
 
     @Override
-    public void setup(String path) {
-        super.setup(path);
-    }
-
-    @Override
     public Object partOne() {
         return input.stream()
                 .filter(Day05::hasVowels)
