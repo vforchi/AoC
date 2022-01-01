@@ -24,6 +24,9 @@ dependencies {
     implementation("com.github.dpaukov:combinatoricslib3:3.3.2")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.13.0")
     implementation("org.springframework:spring-core:5.3.13")
+
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.8.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.2")
 }
 
 java {
