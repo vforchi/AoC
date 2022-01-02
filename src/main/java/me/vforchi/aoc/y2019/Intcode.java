@@ -146,15 +146,23 @@ public class Intcode {
                 .collect(joining(","));
     }
 
-    public long getOutput(int pos) {
+    public Long getOutput(int pos) {
         return outputs.get(pos);
     }
 
-    public long getLastOutput() {
+    public Long getLastOutput() {
         return outputs.get(outputs.size() - 1);
+    }
+
+    public Long getLastOutput(int fromEnd) {
+        return outputs.get(outputs.size() - 1 - fromEnd);
     }
 
     public static Intcode fromText(String input) {
         return new Intcode(input);
+    }
+
+    public boolean isNotFinished() {
+        return runningProgram.get(pos) != END;
     }
 }
