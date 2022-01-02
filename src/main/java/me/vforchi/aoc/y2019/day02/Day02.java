@@ -31,7 +31,7 @@ public class Day02 extends Day {
                 .orElseThrow();
     }
 
-    public int run(int noun, int verb) {
+    public long run(int noun, int verb) {
         intcode.reset();
         intcode.setValue(1, noun);
         intcode.setValue(2, verb);

@@ -36,7 +36,7 @@ public class Day07 extends Day {
         return openLoop(0);
     }
 
-    private int openLoop(int signal) {
+    private long openLoop(long signal) {
         for (Intcode ampli: amplifiers) {
             ampli.run(signal);
             signal = ampli.getLastOutput();
@@ -64,7 +64,7 @@ public class Day07 extends Day {
 
     private long loop(List<Integer> phases) {
         init(phases);
-        int signal = 0;
+        long signal = 0;
         boolean isRunning = true;
         while (isRunning) {
             var outputs = lastAmplifier.getOutputs().size();

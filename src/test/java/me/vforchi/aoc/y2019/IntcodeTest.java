@@ -1,5 +1,6 @@
 package me.vforchi.aoc.y2019;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -55,9 +56,22 @@ public class IntcodeTest {
             "3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99:1234:1001"
     }, delimiter = ':')
     void day5part2(String program, int input, int output) {
-        var intcode = Intcode.fromText(program);
-        intcode.run(input);
-        assertEquals(output, intcode.getOutput(0));
+        var result = Intcode.fromText(program).run(input).get(0);
+        assertEquals(output, result);
+    }
+
+    @Test
+    void day9() {
+        var quine = "109,1,204,-1,1001,100,1,100,1008,100,16,101,1006,101,0,99";
+        var intcode = Intcode.fromText(quine);
+        intcode.run();
+        assertEquals(StringUtils.join(intcode.getOutputs(), ","), quine);
+
+        var output = Intcode.fromText("1102,34915192,34915192,7,4,7,99,0").run().get(0);
+        assertEquals(1219070632396864L, output);
+
+        output = Intcode.fromText("104,1125899906842624,99").run().get(0);
+        assertEquals(1125899906842624L, output);
     }
 
 }
