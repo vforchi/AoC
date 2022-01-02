@@ -3,7 +3,7 @@ package me.vforchi.aoc.y2021.day13;
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import me.vforchi.aoc.Day;
-import me.vforchi.aoc.y2020.Utils;
+import me.vforchi.aoc.Utils;
 
 import java.util.List;
 

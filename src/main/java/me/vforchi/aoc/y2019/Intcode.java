@@ -1,5 +1,7 @@
 package me.vforchi.aoc.y2019;
 
+import lombok.Getter;
+
 import java.util.*;
 
 import static java.util.stream.Collectors.joining;
@@ -21,7 +23,7 @@ public class Intcode {
     private List<Integer> runningProgram;
 
     private int pos;
-    private List<Integer> outputs;
+    @Getter private List<Integer> outputs;
 
     public Intcode(String program) {
         this.program = program;
@@ -33,6 +35,7 @@ public class Intcode {
                 .map(Integer::parseInt)
                 .collect(toCollection(ArrayList::new));
         pos = 0;
+        outputs = new ArrayList<>();
     }
 
     public int getValue(int pos) {
@@ -52,13 +55,18 @@ public class Intcode {
     }
 
     public void run(Deque<Integer> inputs) {
-        outputs = new ArrayList<>();
         while (runningProgram.get(pos) != END) {
             int ins = runningProgram.get(pos);
             switch (ins % 100) {
                 case ADD -> add(getParameter(ins, 1), getParameter(ins, 2), runningProgram.get(pos + 3));
                 case MUL -> multiply(getParameter(ins, 1), getParameter(ins, 2), runningProgram.get(pos + 3));
-                case IN -> input(inputs.pop());
+                case IN -> {
+                    if (inputs.isEmpty()) {
+                        return;
+                    } else {
+                        input(inputs.pop());
+                    }
+                }
                 case OUT -> output(getParameter(ins, 1));
                 case JIT -> jumpIfTrue(getParameter(ins, 1), getParameter(ins, 2));
                 case JIF -> jumpIfFalse(getParameter(ins, 1), getParameter(ins, 2));

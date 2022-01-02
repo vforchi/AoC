@@ -1,6 +1,6 @@
 package me.vforchi.aoc.y2020.day11;
 
-import me.vforchi.aoc.y2020.Utils;
+import me.vforchi.aoc.Utils;
 import org.apache.commons.collections4.ListUtils;
 
 import java.util.List;

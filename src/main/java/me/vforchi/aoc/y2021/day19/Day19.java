@@ -3,7 +3,7 @@ package me.vforchi.aoc.y2021.day19;
 import com.google.common.collect.Lists;
 import io.vavr.Tuple;
 import me.vforchi.aoc.Day;
-import me.vforchi.aoc.y2020.Utils;
+import me.vforchi.aoc.Utils;
 
 import java.util.HashMap;
 import java.util.List;

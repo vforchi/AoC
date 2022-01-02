@@ -1,7 +1,7 @@
 package me.vforchi.aoc.y2020.day04;
 
 import me.vforchi.aoc.Day;
-import me.vforchi.aoc.y2020.Utils;
+import me.vforchi.aoc.Utils;
 
 import java.util.*;
 import java.util.stream.Collectors;
