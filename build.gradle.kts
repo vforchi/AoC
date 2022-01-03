@@ -21,6 +21,7 @@ dependencies {
     implementation("commons-codec:commons-codec:1.15")
     implementation("org.apache.commons:commons-lang3:3.12.0")
     implementation("org.apache.commons:commons-collections4:4.4")
+    implementation("org.apache.commons:commons-math3:3.5")
     implementation("com.github.dpaukov:combinatoricslib3:3.3.2")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.13.0")
     implementation("org.springframework:spring-core:5.3.13")
