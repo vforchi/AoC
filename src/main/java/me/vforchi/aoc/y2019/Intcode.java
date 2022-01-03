@@ -60,6 +60,7 @@ public class Intcode {
     }
 
     public List<Long> run(Deque<Long> inputs) {
+        var newOutputs = new ArrayList<Long>();
         while (runningProgram.get(pos) != END) {
             int ins = runningProgram.get(pos).intValue();
             switch (ins % 100) {
@@ -67,12 +68,16 @@ public class Intcode {
                 case MUL -> multiply(getParameter(ins, 1), getParameter(ins, 2), getAddress(ins, 3));
                 case IN -> {
                     if (inputs.isEmpty()) {
-                        return Collections.emptyList();
+                        outputs.addAll(newOutputs);
+                        return newOutputs;
                     } else {
                         input(inputs.pop(), getAddress(ins, 1));
                     }
                 }
-                case OUT -> output(getParameter(ins, 1));
+                case OUT -> {
+                    newOutputs.add(getParameter(ins, 1));
+                    pos += 2;
+                }
                 case JIT -> jumpIfTrue(getParameter(ins, 1), getParameter(ins, 2));
                 case JIF -> jumpIfFalse(getParameter(ins, 1), getParameter(ins, 2));
                 case LT -> lessThan(getParameter(ins, 1), getParameter(ins, 2), getAddress(ins, 3));
@@ -80,7 +85,8 @@ public class Intcode {
                 case BASE -> adjustBase(getParameter(ins, 1));
             }
         }
-        return outputs;
+        outputs.addAll(newOutputs);
+        return newOutputs;
     }
 
     private void add(long val1, long val2, long dest) {
@@ -95,11 +101,6 @@ public class Intcode {
 
     private void input(long par, long dest) {
         runningProgram.put(dest, par);
-        pos += 2;
-    }
-
-    private void output(long par) {
-        outputs.add(par);
         pos += 2;
     }
 
