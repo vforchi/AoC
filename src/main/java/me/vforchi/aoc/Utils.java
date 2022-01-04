@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -50,5 +51,21 @@ public class Utils {
             }
             return tmp;
         }
+    }
+
+    public static long binarySearch(long min, long max, long target, Function<Long, Long> function) {
+        long mid = 0L;
+        while (min <= max) {
+            mid = (min + max) / 2;
+            var midOre = function.apply(mid);
+            if (midOre > target) {
+                max = mid - 1;
+            } else if (midOre < target) {
+                min = mid + 1;
+            } else {
+                return mid;
+            }
+        }
+        return mid - 1;
     }
 }
