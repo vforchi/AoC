@@ -147,11 +147,11 @@ public class Day17 extends Day {
         public Long clean(String path) {
             asciiProgram.reset();
             asciiProgram.setValue(0, 2);
-            asciiProgram.run(convertToCommands(path));
+            asciiProgram.runCommands(convertToCommands(path));
             return asciiProgram.getLastOutput();
         }
 
-        private Deque<Long> convertToCommands(String path) {
+        private List<String> convertToCommands(String path) {
             var repeated = findAllRepeated(path);
             var parts = Sets.combinations(repeated, 3).stream()
                     .map(ArrayList::new)
@@ -159,11 +159,7 @@ public class Day17 extends Day {
                     .findFirst()
                     .orElseThrow();
             var mainRoutine = getMainRoutine(path, parts.get(0), parts.get(1), parts.get(2));
-            return Stream.of(mainRoutine, parts.get(0), parts.get(1), parts.get(2), "n")
-                    .map(s -> s + '\n')
-                    .flatMap(s -> Stream.ofAll(s.chars().boxed()))
-                    .map(Integer::longValue)
-                    .toJavaCollection(ArrayDeque::new);
+            return List.of(mainRoutine, parts.get(0), parts.get(1), parts.get(2), "n");
         }
 
         private String getMainRoutine(String path, String A, String B, String C) {

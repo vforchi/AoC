@@ -59,6 +59,19 @@ public class Intcode {
         return run(Arrays.stream(inputs).boxed().collect(toCollection(ArrayDeque::new)));
     }
 
+    public List<Long> runCommands(String... commands) {
+        return runCommands(Arrays.asList(commands));
+    }
+
+    public List<Long> runCommands(List<String> commands) {
+        var inputs = commands.stream()
+                .map(s -> s + '\n')
+                .flatMap(s -> s.chars().boxed())
+                .map(Integer::longValue)
+                .collect(toCollection(ArrayDeque::new));
+        return run(inputs);
+    }
+
     public List<Long> run(Deque<Long> inputs) {
         var newOutputs = new ArrayList<Long>();
         while (runningProgram.get(pos) != END) {
